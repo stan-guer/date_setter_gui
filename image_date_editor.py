@@ -14,8 +14,8 @@ class ImageDateEditor:
     def __init__(self, root, folder_path):
         self.root = root
         self.folder_path = folder_path
-        self.files = [f for f in os.listdir(folder_path)
-                      if f.lower().endswith(('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.gif'))]
+        self.files = sorted([f for f in os.listdir(folder_path)
+                            if f.lower().endswith(('.jpg', '.jpeg', '.png', '.tif', '.tiff', '.bmp', '.gif'))])
         self.idx = 0
         self.current_image = None
         self.date_var = tk.StringVar(value="")  # persists last entered prompt
