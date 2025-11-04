@@ -48,6 +48,11 @@ class ImageDateEditor:
                                   bg='#f0f0f0', font=('Arial', 12))
         self.label_status.pack(pady=6)
 
+        # Error message label
+        self.label_error = Label(main_frame, text="", wraplength=1800,
+                                 bg='#f0f0f0', font=('Arial', 12), fg='red')
+        self.label_error.pack(pady=2)
+
         # Date input row (embedded prompt)
         prompt_frame = Frame(main_frame, bg='#f0f0f0')
         prompt_frame.pack(pady=6)
@@ -223,6 +228,14 @@ class ImageDateEditor:
 
     # -------- UI actions --------
 
+    def show_error(self, error_message):
+        """Display an error message in the GUI instead of a popup."""
+        self.label_error.configure(text=f"❌ Error: {error_message}")
+
+    def clear_error(self):
+        """Clear the error message display."""
+        self.label_error.configure(text="")
+
     def show_image(self):
         if not self.files:
             return
@@ -272,18 +285,20 @@ class ImageDateEditor:
     def prev_image(self):
         if self.idx > 0:
             self.idx -= 1
+            self.clear_error()
             self.show_image()
 
     def next_image(self):
         if self.idx < len(self.files) - 1:
             self.idx += 1
+            self.clear_error()
             self.show_image()
 
     def set_date(self):
         user_input = self.date_var.get().strip()
 
         if not user_input:
-            messagebox.showerror("Parse Error", "Please enter a date (e.g., 'Nov 24', 'yesterday', '2 months ago').")
+            self.show_error("Please enter a date (e.g., 'Nov 24', 'yesterday', '2 months ago').")
             self.entry_date.focus_set()
             return
 
@@ -294,7 +309,7 @@ class ImageDateEditor:
             })
 
             if not parsed_date:
-                messagebox.showerror("Parse Error", f"Could not understand '{user_input}'")
+                self.show_error(f"Could not understand '{user_input}'. Please try a different format.")
                 self.entry_date.focus_set()
                 return
 
@@ -304,15 +319,16 @@ class ImageDateEditor:
             if success:
                 # Keep the last prompt in the field (per your request)
                 self.label_status.configure(text=f"✅ {self.files[self.idx]} - '{user_input}' → {msg}")
+                self.clear_error()  # Clear any previous errors on success
                 # focus back to entry for quick iteration
                 self.entry_date.focus_set()
                 self.entry_date.icursor(tk.END)
             else:
-                messagebox.showerror("Update Error", msg)
+                self.show_error(msg)
                 self.entry_date.focus_set()
 
         except Exception as e:
-            messagebox.showerror("Error", f"Error processing date: {str(e)}")
+            self.show_error(f"Error processing date: {str(e)}")
             self.entry_date.focus_set()
 
 
