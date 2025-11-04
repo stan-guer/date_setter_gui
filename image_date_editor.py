@@ -287,12 +287,14 @@ class ImageDateEditor:
             self.idx -= 1
             self.clear_error()
             self.show_image()
+            self.entry_date.focus_set()
 
     def next_image(self):
         if self.idx < len(self.files) - 1:
             self.idx += 1
             self.clear_error()
             self.show_image()
+            self.entry_date.focus_set()
 
     def set_date(self):
         user_input = self.date_var.get().strip()
@@ -376,14 +378,12 @@ def main():
 
         # Keyboard shortcuts
         def on_key(event):
-            # Don't intercept arrow keys when typing in the entry field
-            if event.widget == app.entry_date:
-                return
-            
-            if event.keysym == 'Left':
-                app.prev_image()
-            elif event.keysym == 'Right':
-                app.next_image()
+            if event.keysym == 'Tab':
+                if event.state & 0x1:  # Shift key is pressed
+                    app.prev_image()
+                else:
+                    app.next_image()
+                return 'break'  # Prevent default tab behavior
             elif event.keysym == 'space':
                 app.set_date()
 
