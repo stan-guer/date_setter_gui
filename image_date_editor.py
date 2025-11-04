@@ -376,6 +376,10 @@ def main():
 
         # Keyboard shortcuts
         def on_key(event):
+            # Don't intercept arrow keys when typing in the entry field
+            if event.widget == app.entry_date:
+                return
+            
             if event.keysym == 'Left':
                 app.prev_image()
             elif event.keysym == 'Right':
