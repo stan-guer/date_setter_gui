@@ -6,16 +6,9 @@ Here I created the fastest tool for this purpose (that i could find) because you
 
 ## Usage
 
-1. **Create a virtual environment and install dependencies**:
+1. **Setup and run**:
    ```bash
-   uv venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   uv pip install Pillow dateparser
-   ```
-
-2. **Run the application**:
-   ```bash
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   uv sync 
    uv run image_date_editor.py
    ```
 
