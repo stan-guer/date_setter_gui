@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' blob:; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    >
+    <title>EXIF Picture Taken Date Editor</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="page-header">
+        <div>
+          <h1>Edit EXIF Picture Taken Date</h1>
+          <p>Your image stays on your device. Metadata is edited locally in this browser.</p>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="EXIF date editor">
+        <div class="tool-panel">
+          <label class="drop-zone" id="dropZone">
+            <input id="fileInput" type="file" accept=".jpg,.jpeg,image/jpeg">
+            <span class="drop-title">Choose JPEG</span>
+            <span class="drop-copy">Drop a .jpg or .jpeg here</span>
+          </label>
+
+          <div class="message" id="message" role="status" aria-live="polite"></div>
+
+          <form class="edit-form" id="editForm">
+            <fieldset>
+              <legend>New EXIF Date</legend>
+              <div class="field-grid">
+                <label>
+                  <span>Date</span>
+                  <input id="dateInput" type="date" required disabled>
+                </label>
+                <label>
+                  <span>Time</span>
+                  <input id="timeInput" type="time" required disabled>
+                </label>
+                <label>
+                  <span>Seconds</span>
+                  <input id="secondsInput" type="number" min="0" max="59" step="1" value="0" disabled>
+                </label>
+              </div>
+            </fieldset>
+
+            <button id="downloadButton" type="submit" disabled>Download edited copy</button>
+          </form>
+        </div>
+
+        <div class="info-panel">
+          <section class="preview-wrap" aria-label="Selected image preview">
+            <div class="preview-empty" id="previewEmpty">No image selected</div>
+            <img id="previewImage" alt="Selected JPEG preview">
+          </section>
+
+          <section class="details" aria-label="File and metadata details">
+            <h2>File</h2>
+            <dl class="file-facts" id="fileFacts">
+              <div>
+                <dt>Name</dt>
+                <dd>-</dd>
+              </div>
+              <div>
+                <dt>Size</dt>
+                <dd>-</dd>
+              </div>
+              <div>
+                <dt>Type</dt>
+                <dd>-</dd>
+              </div>
+            </dl>
+
+            <h2>EXIF Dates</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Tag</th>
+                    <th scope="col">Current value</th>
+                  </tr>
+                </thead>
+                <tbody id="metadataRows">
+                  <tr>
+                    <td>DateTimeOriginal</td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td>DateTime</td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td>DateTimeDigitized</td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
