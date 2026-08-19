@@ -1,34 +1,58 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; img-src 'self' blob:; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
-    >
-    <title>EXIF Picture Taken Date Editor</title>
-    <link rel="stylesheet" href="./styles.css">
+    />
+    <title>Batch EXIF Picture Taken Date Editor</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./vendor/jszip.min.js" defer></script>
     <script src="./app.js" defer></script>
   </head>
   <body>
     <main class="app-shell">
       <header class="page-header">
         <div>
-          <h1>Edit EXIF Picture Taken Date</h1>
-          <p>Your image stays on your device. Metadata is edited locally in this browser.</p>
+          <h1>Edit EXIF Picture Taken Dates</h1>
+          <p>
+            Your images stay on your device. Metadata is edited locally in this
+            browser — no upload.
+          </p>
         </div>
       </header>
 
-      <section class="workspace" aria-label="EXIF date editor">
+      <section class="workspace" aria-label="Batch EXIF date editor">
         <div class="tool-panel">
           <label class="drop-zone" id="dropZone">
-            <input id="fileInput" type="file" accept=".jpg,.jpeg,image/jpeg">
-            <span class="drop-title">Choose JPEG</span>
-            <span class="drop-copy">Drop a .jpg or .jpeg here</span>
+            <input
+              id="fileInput"
+              type="file"
+              accept=".jpg,.jpeg,image/jpeg"
+              multiple
+            />
+            <span class="drop-title">Choose or drop JPEGs</span>
+            <span class="drop-copy"
+              >Add more anytime — they're appended to the queue</span
+            >
           </label>
 
-          <div class="message" id="message" role="status" aria-live="polite"></div>
+          <div
+            class="message"
+            id="message"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+          <section class="queue" aria-label="Image queue">
+            <div class="queue-head">
+              <h2>Queue</h2>
+              <span class="stats" id="stats"></span>
+            </div>
+            <ul class="queue-list" id="queueList"></ul>
+          </section>
 
           <form class="edit-form" id="editForm">
             <fieldset>
@@ -36,27 +60,64 @@
               <div class="field-grid">
                 <label>
                   <span>Date</span>
-                  <input id="dateInput" type="date" required disabled>
+                  <input id="dateInput" type="date" required disabled />
                 </label>
                 <label>
                   <span>Time</span>
-                  <input id="timeInput" type="time" required disabled>
+                  <input id="timeInput" type="time" required disabled />
                 </label>
                 <label>
                   <span>Seconds</span>
-                  <input id="secondsInput" type="number" min="0" max="59" step="1" value="0" disabled>
+                  <input
+                    id="secondsInput"
+                    type="number"
+                    min="0"
+                    max="59"
+                    step="1"
+                    value="0"
+                    disabled
+                  />
                 </label>
               </div>
             </fieldset>
 
-            <button id="downloadButton" type="submit" disabled>Download edited copy</button>
+            <div class="button-row">
+              <button id="setDateButton" type="submit" disabled>
+                Set date
+              </button>
+              <button id="resetButton" type="button" class="secondary" disabled>
+                Reset
+              </button>
+            </div>
+            <button
+              id="applyAllButton"
+              type="button"
+              class="secondary"
+              disabled
+            >
+              Apply to all
+            </button>
           </form>
+
+          <nav class="nav-row" aria-label="Navigate images">
+            <button id="prevButton" type="button" class="secondary" disabled>
+              Previous
+            </button>
+            <span class="counter" id="counter">0 / 0</span>
+            <button id="nextButton" type="button" class="secondary" disabled>
+              Next
+            </button>
+          </nav>
+
+          <button id="downloadButton" type="button" disabled>
+            Download edited (0)
+          </button>
         </div>
 
         <div class="info-panel">
           <section class="preview-wrap" aria-label="Selected image preview">
             <div class="preview-empty" id="previewEmpty">No image selected</div>
-            <img id="previewImage" alt="Selected JPEG preview">
+            <img id="previewImage" alt="Selected JPEG preview" />
           </section>
 
           <section class="details" aria-label="File and metadata details">
