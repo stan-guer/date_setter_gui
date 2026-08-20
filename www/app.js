@@ -209,6 +209,10 @@
 		renderQueue();
 		renderSelection();
 
+		if (added > 0 && firstNewIndex === 0) {
+			seedInputs(state.items[state.currentIndex]);
+		}
+
 		const skipped = skippedNames.length;
 		let summary = `Loaded ${added} image${added === 1 ? "" : "s"}.`;
 		if (skipped) {
@@ -279,7 +283,6 @@
 				: null,
 		);
 		renderMetadata(item ? item.metadata : null);
-		seedInputs(item);
 	}
 
 	function renderPreview(item) {
@@ -375,7 +378,6 @@
 			return;
 		}
 		item.pendingDate = null;
-		seedInputs(item);
 		renderQueue();
 		updateControls();
 		showMessage(`Cleared the date for "${item.name}".`, "");
